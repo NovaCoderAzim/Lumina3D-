@@ -424,7 +424,12 @@ def run(
                     texture_atlas = str(dense_result.texture_atlas_path)
                     shutil.copyfile(dense_result.texture_atlas_path, texture_dir / "atlas_0.png")
                 texture_resolution = "3584x3072"
-                tri_mesh = trimesh.load(str(textured_glb_src), process=False)
+                loaded_geo = trimesh.load(str(textured_glb_src), process=False)
+                if isinstance(loaded_geo, trimesh.Scene):
+                    scene_meshes = [g for g in loaded_geo.geometry.values() if isinstance(g, trimesh.Trimesh) and len(g.vertices) > 0]
+                    tri_mesh = scene_meshes[0] if len(scene_meshes) == 1 else (trimesh.util.concatenate(scene_meshes) if scene_meshes else None)
+                elif isinstance(loaded_geo, trimesh.Trimesh):
+                    tri_mesh = loaded_geo
                 logger.info("Adopted genuine photogrammetric textured model from dense stage: %s", textured_glb_dest)
             except Exception as d_tex_err:
                 logger.warning("Could not adopt dense stage textured model: %s", d_tex_err)

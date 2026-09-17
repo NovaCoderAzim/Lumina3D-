@@ -163,6 +163,10 @@ def export_reconstruction_to_glb(
     # 3. Observed Surface Mesh
     observed_trimesh = None
     if mesh is not None:
+        if isinstance(mesh, trimesh.Scene):
+            s_meshes = [g for g in mesh.geometry.values() if isinstance(g, trimesh.Trimesh) and len(g.vertices) > 0]
+            if s_meshes:
+                mesh = s_meshes[0] if len(s_meshes) == 1 else trimesh.util.concatenate(s_meshes)
         if isinstance(mesh, trimesh.Trimesh) and len(mesh.vertices) > 0:
             observed_trimesh = mesh.copy()
             observed_trimesh.vertices = np.asarray(mesh.vertices) @ _COLMAP_TO_GLTF.T

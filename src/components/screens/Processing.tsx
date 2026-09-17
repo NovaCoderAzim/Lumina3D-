@@ -94,10 +94,16 @@ export function Processing({
   };
 
   const formatEta = () => {
-    let remaining = Math.max(5, TOTAL_EXPECTED_SECONDS - elapsedSeconds);
-    if (currentStage === 'RECONSTRUCTION' && elapsedSeconds > 75) {
-      remaining = Math.max(10, 120 - elapsedSeconds);
+    if (displayPct > 5 && elapsedSeconds > 10) {
+      const estimatedTotal = Math.round(elapsedSeconds / (displayPct / 100));
+      const remaining = Math.max(5, estimatedTotal - elapsedSeconds);
+      const m = Math.floor(remaining / 60);
+      const s = Math.floor(remaining % 60);
+      if (m === 0) return `~${s}s remaining`;
+      return `~${m}m ${s}s remaining`;
     }
+    const typicalSeconds = 540;
+    const remaining = Math.max(15, typicalSeconds - elapsedSeconds);
     const m = Math.floor(remaining / 60);
     const s = Math.floor(remaining % 60);
     if (m === 0) return `~${s}s remaining`;

@@ -101,6 +101,9 @@ class Project:
             "name": self.name,
             "created_at": self.created_at,
             "status": self.status.value,
+            "stage": self.stage.value if self.stage else None,
+            "progress": self.progress,
+            "message": self.message,
             "video_filename": self.video_filename,
             "model_path": self.model_path,
         }
@@ -124,14 +127,45 @@ class ProjectStore:
 
     def create(self, name: str) -> Project:
         with self._lock:
-            self._counter += 1
-            project_id = f"proj_{datetime.now().strftime('%Y%m%d')}_{self._counter:04d}"
+            settings = get_settings()
+            today_str = datetime.now().strftime("%Y%m%d")
+            prefix = f"proj_{today_str}_"
+
+            max_counter = 0
+            if settings.projects_dir.exists():
+                for pdir in settings.projects_dir.iterdir():
+                    if pdir.is_dir() and pdir.name.startswith(prefix):
+                        suffix = pdir.name[len(prefix):]
+                        try:
+                            num = int(suffix)
+                            if num > max_counter:
+                                max_counter = num
+                        except ValueError:
+                            pass
+            for pid in self._projects.keys():
+                if pid.startswith(prefix):
+                    suffix = pid[len(prefix):]
+                    try:
+                        num = int(suffix)
+                        if num > max_counter:
+                            max_counter = num
+                    except ValueError:
+                        pass
+
+            next_counter = max_counter + 1
+            self._counter = next_counter
+            project_id = f"{prefix}{next_counter:04d}"
             project = Project(project_id, name)
             self._projects[project_id] = project
             self._persist(project)
             return project
 
     def _load_from_disk(self, project_id: str) -> Optional[Project]:
+        # If project is actively running or uploading in memory, never clobber its live progress!
+        existing = self._projects.get(project_id)
+        if existing and existing.status in {ProjectStatus.PROCESSING, ProjectStatus.UPLOADING}:
+            return existing
+
         settings = get_settings()
         pdir = settings.project_dir(project_id)
         pfile = pdir / "project.json"
@@ -163,6 +197,20 @@ class ProjectStore:
                 proj.status = ProjectStatus(status_str)
             except Exception:
                 proj.status = ProjectStatus.COMPLETED
+
+            stage_str = data.get("stage")
+            if stage_str:
+                try:
+                    proj.stage = ProcessingStage(stage_str)
+                except Exception:
+                    pass
+            if data.get("progress") is not None:
+                try:
+                    proj.progress = float(data.get("progress"))
+                except (ValueError, TypeError):
+                    proj.progress = None
+            proj.message = data.get("message")
+
             proj.video_filename = data.get("video_filename")
             proj.model_path = data.get("model_path")
 
@@ -281,13 +329,22 @@ class ProjectStore:
 
     def get(self, project_id: str) -> Optional[Project]:
         with self._lock:
-            disk_proj = self._load_from_disk(project_id)
-            if disk_proj is not None:
-                return disk_proj
-            return self._projects.get(project_id)
+            existing = self._projects.get(project_id)
+            if existing is not None:
+                # If project is actively running or uploading, live memory state is authoritative!
+                if existing.status in {ProjectStatus.PROCESSING, ProjectStatus.UPLOADING}:
+                    return existing
+                # If completed or failed, safely refresh analytics/metadata from disk
+                disk_proj = self._load_from_disk(project_id)
+                if disk_proj is not None:
+                    return disk_proj
+                return existing
+
+            return self._load_from_disk(project_id)
 
     def save(self, project: Project) -> None:
         with self._lock:
+            self._projects[project.project_id] = project
             self._persist(project)
 
     def all(self) -> List[Project]:
@@ -300,7 +357,9 @@ class ProjectStore:
             if settings.projects_dir.exists():
                 for pdir in settings.projects_dir.iterdir():
                     if pdir.is_dir():
-                        self._load_from_disk(pdir.name)
+                        existing = self._projects.get(pdir.name)
+                        if not existing or existing.status not in {ProjectStatus.PROCESSING, ProjectStatus.UPLOADING}:
+                            self._load_from_disk(pdir.name)
 
             results: List[dict] = []
             for proj in self._projects.values():
