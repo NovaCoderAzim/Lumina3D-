@@ -1,5 +1,5 @@
 """
-Central configuration for the DRISHTI-3D backend.
+Central configuration for the Lumina3D backend.
 
 All tunables come from environment variables (optionally loaded from a
 .env file). The mock flags are the heart of the integration strategy

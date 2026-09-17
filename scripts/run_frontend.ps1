@@ -1,5 +1,5 @@
 <#
-Starts the DRISHTI-3D frontend dev server (Vite) in REAL-backend mode.
+Starts the Lumina3D frontend dev server (Vite) in REAL-backend mode.
 Talks to the backend at http://127.0.0.1:8000 via the /api proxy.
 
 Usage:  powershell -ExecutionPolicy Bypass -File scripts\run_frontend.ps1

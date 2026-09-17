@@ -1,5 +1,5 @@
 <#
-Runs the DRISHTI-3D backend in full mock mode (no GPU/COLMAP/weights).
+Runs the Lumina3D backend in full mock mode (no GPU/COLMAP/weights).
 Usage:  powershell -ExecutionPolicy Bypass -File scripts\run_backend.ps1
 #>
 $env:USE_MOCK_VISION = "true"

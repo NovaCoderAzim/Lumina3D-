@@ -92,7 +92,7 @@ def detect_capabilities(
 
 
 # --------------------------------------------------------------------------
-# Clean Sensor Fusion Interfaces (Section 16 - Future SIH Extensibility)
+# Sensor Fusion Interfaces (Future Extensibility)
 # --------------------------------------------------------------------------
 
 class GPSProvider(ABC):

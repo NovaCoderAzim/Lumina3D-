@@ -106,8 +106,11 @@ export function Viewer3D({
     setRetryKey((k) => k + 1);
   }, [activeUrl]);
 
+  const [resetKey, setResetKey] = useState<number>(0);
+
   const resetCamera = useCallback(() => {
     controlsRef.current?.reset();
+    setResetKey((k) => k + 1);
   }, []);
 
   const toggleFullscreen = useCallback(() => {
@@ -229,7 +232,7 @@ export function Viewer3D({
           />
 
           <Suspense fallback={<Loader />}>
-            {activeUrl ? (
+            {activeUrl && viewMode !== 'SPLATS' ? (
               <group
                 onPointerDown={(e) => {
                   if (measuring && onMeasurePoint) {
@@ -272,7 +275,15 @@ export function Viewer3D({
 
       {/* 3D Gaussian Splatting (3DGS) Radiance Field Renderer */}
       {viewMode === 'SPLATS' && splatUrl && (
-        <GaussianSplatViewer splatUrl={splatUrl} />
+        <GaussianSplatViewer
+          splatUrl={splatUrl}
+          pitch={pitch}
+          roll={roll}
+          theme={theme}
+          groundY={groundY}
+          gridOffset={gridOffset}
+          resetKey={resetKey}
+        />
       )}
 
       {/* Top Bar: View Mode Switcher & Provenance Controls */}

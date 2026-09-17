@@ -1,3 +1,3 @@
-# Vision module (Person 2) — real frame extraction.
+# Lumina3D Vision module — frame extraction.
 opencv-python>=4.8
 numpy>=1.24

@@ -1,13 +1,12 @@
 """
 USE_MOCK_RECONSTRUCTION=true
 
-Lets Person 5 build and test the 3D viewer, and Person 1 build the API
-layer, without COLMAP, a GPU, or a real drone dataset installed at all.
+Enables testing of the 3D viewer and API layer without COLMAP, a GPU,
+or a real drone dataset installed.
 
-Hard requirement (guide section 27): the schema returned here must be
-IDENTICAL to pipeline.py's real ReconstructionResult. To make that
-verifiable, this module has no dependency on colmap_runner.py,
-pointcloud.py, or mesh.py - only trimesh/numpy, so it runs anywhere.
+The schema returned here is identical to pipeline.py's real ReconstructionResult.
+This module has no dependency on colmap_runner.py, pointcloud.py, or mesh.py —
+only trimesh/numpy, so it runs anywhere.
 """
 
 from __future__ import annotations

@@ -115,7 +115,7 @@ export interface AnalyticsResponse {
   vegetation: number;
   average_detection_confidence: number; // 0..1
   processing_time_seconds?: number;
-  // SIH 26158 differentiators & scientific provenance
+  // Lumina3D photogrammetric metrics & scientific provenance
   metric_scale?: MetricScale | null;
   confidence?: ConfidenceSummary | null;
   dynamic_masking?: DynamicMaskingSummary | null;

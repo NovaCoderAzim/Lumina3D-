@@ -55,7 +55,7 @@ class Project:
         self.model_path: Optional[str] = None  # absolute path to model.glb
         self.analytics: Optional[AnalyticsResponse] = None
         self.objects: List[SemanticObject] = []
-        # SIH differentiators
+        # Photogrammetric analytics & provenance
         self.capture_quality: Optional[dict] = None
         self.metric_scale: Optional[dict] = None
         self.confidence: Optional[dict] = None

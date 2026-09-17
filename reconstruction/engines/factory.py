@@ -1,5 +1,5 @@
 """
-Engine factory for DRISHTI-3D reconstruction (Section 7).
+Engine factory for Lumina3D reconstruction.
 
 Dispatches based on DENSE_ENGINE setting:
   AUTO -> genuine dense MVS if available, else authentic sparse-only

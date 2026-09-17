@@ -1,9 +1,9 @@
 """
-Data schemas for the DRISHTI-3D vision module (Person 2).
+Data schemas for the Lumina3D vision module.
 
 Kept dependency-free (stdlib only) so any caller can import the contract
-without pulling in OpenCV/NumPy. This is the shape Person 1's backend and
-the reconstruction module rely on.
+without pulling in OpenCV/NumPy. This is the shape the backend and
+reconstruction engine rely on.
 """
 
 from __future__ import annotations

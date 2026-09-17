@@ -1,17 +1,13 @@
 """
-Reconstruction module adapter (Person 3's territory).
+Reconstruction module adapter.
 
-Wraps the real `reconstruction` package that Person 3 delivered:
+Wraps the `reconstruction` photogrammetry package:
 
     reconstruction.interface.ReconstructionEngine.process(
         frames_directory, project_id, output_dir
-    ) -> reconstruction.schemas.ReconstructionResult   (a pydantic model)
+    ) -> reconstruction.schemas.ReconstructionResult
 
-Design note: Person 3's interface.py eagerly imports pipeline.py, which
-imports open3d/pycolmap. That would defeat the point of a GPU-free mock,
-so in MOCK mode we call reconstruction.mock.run_mock_reconstruction
-directly (it only needs trimesh/numpy). The returned schema is identical
-either way, so the contract is preserved.
+In mock mode, calls reconstruction.mock.run_mock_reconstruction directly (trimesh/numpy only).
 """
 
 from __future__ import annotations

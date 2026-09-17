@@ -1,8 +1,8 @@
 """
-Tests for the SIH 26158 differentiator modules:
-  - telemetry ingestion + geodesy (challenge viii input)
-  - metric georeferencing (challenge viii)
-  - confidence/coverage (challenges i, vii)
+Tests for Lumina3D core pipeline features:
+  - telemetry ingestion + geodesy
+  - metric georeferencing
+  - confidence / coverage analytics
 
 These use only numpy (no COLMAP/torch), so they run in any environment.
 """

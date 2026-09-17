@@ -1,9 +1,9 @@
 """
 frame_extractor.py
 
-Real video -> selected frames, using OpenCV. This is the genuine Person 2
-deliverable: it decodes an actual video, scores every candidate frame for
-sharpness, and keeps the best, most evenly-spaced frames for reconstruction.
+Real video -> selected frames, using OpenCV. Decodes an actual video,
+scores every candidate frame for sharpness, and keeps the best,
+most evenly-spaced frames for reconstruction.
 
 Quality metric: variance of the Laplacian (a standard, well-understood
 focus/sharpness measure). Blurry frames have low Laplacian variance; sharp,

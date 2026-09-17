@@ -1,6 +1,6 @@
 """
 Pydantic schemas — the API contract between the backend and the React
-frontend (Person 5). Field names and enum values here are deliberately
+frontend. Field names and enum values here are deliberately
 aligned with src/types/index.ts so the frontend consumes responses
 without any remapping.
 """
@@ -53,8 +53,8 @@ class CreateProjectResponse(BaseModel):
 
 
 class ProcessingError(BaseModel):
-    """Human-readable error surfaced to the UI (guide section 11).
-    The UI must never simply crash — it shows title/detail/suggestion."""
+    """Human-readable error surfaced to the UI.
+    The UI surfaces title, detail, and actionable suggestions."""
 
     title: str
     detail: str
@@ -146,7 +146,7 @@ class AnalyticsResponse(BaseModel):
     vegetation: int
     average_detection_confidence: float  # 0..1
     processing_time_seconds: Optional[float] = None
-    # ---- SIH 26158 differentiators ----
+    # ---- Photogrammetric metrics & provenance ----
     metric_scale: Optional[MetricScale] = None
     confidence: Optional[ConfidenceSummary] = None
     dynamic_masking: Optional[DynamicMaskingSummary] = None

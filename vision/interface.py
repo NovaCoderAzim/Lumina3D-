@@ -1,11 +1,11 @@
 """
 interface.py
 
-Public entry point for the DRISHTI-3D vision module (Person 2). Everything
+Public entry point for the Lumina3D vision module. Everything
 about OpenCV, sharpness scoring, and frame selection is hidden behind
 VisionProcessor.process().
 
-Contract (guide section 6):
+Contract:
     vision.process(video_path) -> FrameSelectionResult
 
 Configuration (constructor args or env vars):

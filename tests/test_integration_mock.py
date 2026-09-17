@@ -1,5 +1,5 @@
 """
-Mock, no-GPU integration test (guide section 10).
+Mock, no-GPU integration test.
 
 Verifies the full vertical slice through the real HTTP API:
 
@@ -10,8 +10,7 @@ Verifies the full vertical slice through the real HTTP API:
         -> results aggregate returned
 
 Everything runs with USE_MOCK_*=true so it passes on any machine with no
-GPU, no COLMAP, and no model weights. This is the test P1 must keep green
-before merging anything (guide section 9, rule 6).
+GPU, no COLMAP, and no model weights.
 """
 
 from __future__ import annotations

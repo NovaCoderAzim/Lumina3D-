@@ -1,19 +1,16 @@
 """
-AI / Semantic module adapter (Person 4's territory).
+AI / Semantic module adapter.
 
-Wraps the real `ai` package Person 4 delivered. That package uses flat
-imports internally (`import mock`, `from schemas import ...`), so it
-expects its own directory on sys.path. We add it here and import the
+Wraps the `ai` package. That package uses flat imports internally,
+so it expects its own directory on sys.path. We add it here and import the
 public entry point:
 
     ai.interface.AIProcessor.process(
         frames_directory, project_id, reconstruction_metadata
     ) -> AIResult   (a dataclass with .to_dict())
 
-Category normalisation: Person 4 emits lowercase categories
-(structure/vehicle/human/environment). The frontend expects
-Vehicle/Building/Person/Vegetation. We map them here so neither side has
-to change.
+Category normalisation: Maps lowercase categories (structure/vehicle/human/environment)
+to standard SemanticCategory (Vehicle/Building/Person/Vegetation).
 """
 
 from __future__ import annotations
@@ -31,7 +28,7 @@ logger = get_logger("backend.services.ai")
 
 _AI_DIR = get_settings().repo_root / "ai"
 
-# Person 4 category -> frontend SemanticCategory
+# Category normalisation -> frontend SemanticCategory
 _CATEGORY_MAP = {
     "structure": SemanticCategory.BUILDING,
     "building": SemanticCategory.BUILDING,

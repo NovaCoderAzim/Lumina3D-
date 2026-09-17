@@ -1,12 +1,11 @@
 """
 schemas.py
 
-Data schemas for the AI & Semantic Intelligence module (Person 4,
-DRISHTI-3D). These are the exact JSON-serializable contracts shared with:
-
-- Person 3 (reconstruction / camera poses)  -> consumed, not defined here
-- Person 5 (3D visualization)               -> consumes objects.json / semantic.json
-- Person 6 (analytics)                      -> consumes AIStatistics
+Data schemas for the Lumina3D AI & Semantic Intelligence module.
+These are the exact JSON-serializable contracts shared with:
+- Reconstruction engine (camera poses / 3D georeferencing)
+- 3D Digital Twin viewer (consumes objects.json / semantic.json)
+- Analytics dashboard (consumes AIStatistics)
 
 Keep this file dependency-free (stdlib only) so every other module in this
 package, and any external caller, can import it without pulling in
@@ -90,7 +89,7 @@ class TrackedObject:
 
 @dataclass
 class AIStatistics:
-    """Processing statistics ΓÇö consumed by Person 6's analytics dashboard."""
+    """Processing statistics consumed by the analytics dashboard."""
 
     frames_processed: int = 0
     detections: int = 0

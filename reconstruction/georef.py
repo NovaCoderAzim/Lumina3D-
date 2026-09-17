@@ -1,6 +1,5 @@
 """
-Metric scaling & georeferencing (SIH 26158 challenge viii: metric accuracy
-without GCPs).
+Metric scaling & georeferencing (metric accuracy without GCPs).
 
 COLMAP reconstructs up to an unknown similarity (arbitrary scale, rotation,
 translation). We recover real-world metric scale — and a geo-anchor — by

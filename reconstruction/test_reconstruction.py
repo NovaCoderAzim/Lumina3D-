@@ -1,14 +1,11 @@
 """
-Minimum required test coverage per the project guide (section 30):
+Reconstruction unit tests:
 Dataset A (good), Dataset B (poor overlap), Dataset C (too few images).
 
-These tests use flat-color synthetic images, which is enough to exercise
+These tests use synthetic images, which is enough to exercise
 every code path and error contract WITHOUT needing a GPU or a real
-drone dataset. They intentionally do NOT assert a successful
-reconstruction (that requires real parallax + texture, i.e. an actual
-photo set) - that's a manual/integration test, not a CI test. What they
-do guarantee: the schema contract, the fail-fast behavior, and that
-mock mode and the real pipeline never crash the caller.
+drone dataset. What they guarantee: the schema contract, the fail-fast behavior,
+and that mock mode and the real pipeline never crash the caller.
 
 Run with: pytest reconstruction/test_reconstruction.py -v
 """
@@ -84,9 +81,7 @@ def test_dataset_b_poor_registration(tmp_frames, monkeypatch):
 
 
 # --------------------------------------------------------------------------
-# Dataset A stand-in - schema contract via mock mode. A true "good
-# overlap" dataset requires a real photo set; wiring that in is an
-# integration-test task once Person 2 provides sample frames.
+# Dataset A stand-in - schema contract via mock mode.
 # --------------------------------------------------------------------------
 
 def test_dataset_a_schema_contract_via_mock(tmp_frames):
@@ -101,7 +96,7 @@ def test_dataset_a_schema_contract_via_mock(tmp_frames):
 
 
 # --------------------------------------------------------------------------
-# Mock/real schema parity - the contract Person 5 depends on
+# Mock/real schema parity
 # --------------------------------------------------------------------------
 
 def test_mock_and_real_share_schema(tmp_frames):

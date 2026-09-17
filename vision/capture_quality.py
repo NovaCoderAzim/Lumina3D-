@@ -1,24 +1,22 @@
 """
-Capture-Quality Analyzer (SIH 26158 challenges ii, iii, vi + the near-real-
-time story).
+Lumina3D Capture-Quality Analyzer.
 
 The instant-feedback layer: BEFORE spending minutes on reconstruction, sample
-the video and honestly assess whether it can reconstruct — and tell the
-operator exactly what's wrong. In an operational single-pass scenario
-(disaster/recon), knowing in seconds that the capture is unusable is itself
+the video and assess whether it can reconstruct — and provide the
+operator clear diagnostic metrics. In an operational single-pass scenario
+(disaster response / aerial surveying), knowing in seconds whether the capture is suitable is
 mission-critical value.
 
 Real signals, all from a handful of sampled frames (fast):
-  - Sharpness / motion blur    -> variance of Laplacian (challenge ii)
-  - Exposure consistency       -> brightness spread across frames (iii)
+  - Sharpness / motion blur    -> variance of Laplacian
+  - Exposure consistency       -> brightness spread across frames
   - Inter-frame overlap        -> ORB feature-match ratio between neighbours
   - Camera-motion coverage     -> spread of matched-feature flow direction,
-                                  distinguishing a linear pass (limited angles,
-                                  challenge i) from an orbit
+                                  distinguishing a linear pass from an orbit
   - Compression artifacting    -> blockiness proxy
 
 Output: a 0-100 score, a GO / MARGINAL / NO-GO verdict, per-metric detail,
-and concrete recommendations. Runs in ~seconds on ~24 sampled frames.
+and concrete recommendations. Runs in seconds on sampled frames.
 """
 
 from __future__ import annotations

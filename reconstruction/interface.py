@@ -1,6 +1,6 @@
 """
-The ONLY module Person 1 (and anyone else outside this package) should
-import from. Everything about COLMAP, PyCOLMAP, Open3D, and trimesh is
+Public entry point for the Lumina3D reconstruction engine.
+Everything about COLMAP, PyCOLMAP, Open3D, and trimesh is
 an implementation detail hidden behind ReconstructionEngine.process().
 """
 

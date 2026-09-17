@@ -1,7 +1,7 @@
 """
 Two jobs only:
 
-1. validate_input_images  - sanity-check the frames Person 2 handed us
+1. validate_input_images  - sanity-check the input frames
    BEFORE we spend any GPU time on them.
 2. validate_glb           - make sure the file we're about to report as
    COMPLETED will actually load in a browser.
@@ -51,7 +51,7 @@ def validate_input_images(frames_directory: str | Path) -> list[ValidatedImage]:
         raise ValidationError(
             ErrorCode.INVALID_IMAGES,
             f"Frames directory does not exist: {frames_dir}",
-            "Confirm Person 2's frame-selection step ran and wrote to this path.",
+            "Confirm the frame-selection step ran and wrote to this path.",
         )
 
     candidates = sorted(
@@ -64,7 +64,7 @@ def validate_input_images(frames_directory: str | Path) -> list[ValidatedImage]:
             f"Only {len(candidates)} usable image(s) found in {frames_dir}; "
             f"need at least {MIN_IMAGES}.",
             "Select more frames from the source video, or lower the frame "
-            "filtering threshold in Person 2's pipeline.",
+            "filtering threshold in the vision pipeline.",
         )
 
     validated: list[ValidatedImage] = []
@@ -101,7 +101,7 @@ def validate_input_images(frames_directory: str | Path) -> list[ValidatedImage]:
 def validate_glb(glb_path: str | Path) -> None:
     """Raises ValidationError unless the file exists, is non-empty, parses,
     and contains actual geometry. A reconstruction must NEVER be reported
-    COMPLETED if this fails (guide section 22)."""
+    COMPLETED if this fails."""
 
     path = Path(glb_path)
 

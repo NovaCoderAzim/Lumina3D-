@@ -1,5 +1,5 @@
 <#
-Runs the DRISHTI-3D integration + unit tests in full mock mode.
+Runs the Lumina3D integration + unit tests in full mock mode.
 Usage:  powershell -ExecutionPolicy Bypass -File scripts\run_tests.ps1
 #>
 $env:USE_MOCK_VISION = "true"

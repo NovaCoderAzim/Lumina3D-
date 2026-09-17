@@ -1,5 +1,4 @@
-# DRISHTI-3D backend (Person 1 integration layer)
-# Core API stack — enough to run the whole pipeline in MOCK mode with no GPU.
+# Lumina3D backend core stack
 fastapi>=0.110,<0.116
 uvicorn[standard]>=0.27,<0.31
 pydantic>=2.5,<3
@@ -7,7 +6,7 @@ pydantic-settings>=2.1,<3
 python-multipart>=0.0.9
 python-dotenv>=1.0
 
-# Mock reconstruction produces a real .glb using trimesh (no GPU/COLMAP).
+# 3D Geometry and Math
 trimesh>=4.0
 numpy>=1.24
 
@@ -15,6 +14,6 @@ numpy>=1.24
 pytest>=8.0
 httpx>=0.27          # FastAPI TestClient dependency
 
-# --- Real (non-mock) modules pull heavier deps, kept optional ---
-# Reconstruction (Person 3): see reconstruction/requirements.txt (pycolmap, open3d)
-# AI (Person 4): see ai/requirements.txt (torch, ultralytics, opencv-python)
+# --- Real photogrammetry & AI modules ---
+# Reconstruction: see reconstruction/requirements.txt (pycolmap, open3d, scipy)
+# AI / Vision: see ai/requirements.txt (torch, ultralytics, opencv-python)

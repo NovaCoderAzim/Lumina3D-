@@ -1,9 +1,9 @@
 """
 semantic.py
 
-Central semantic category configuration for DRISHTI-3D. This is the single
+Central semantic category configuration for Lumina3D. This is the single
 source of truth mapping raw model class names -> semantic categories, and
-categories -> the human-facing labels used in semantic.json / the demo UI.
+categories -> the human-facing labels used in semantic.json / the UI.
 
 Extend SEMANTIC_CATEGORIES if the detection model supports more classes.
 Only report classes actually supported by the selected model/pipeline.

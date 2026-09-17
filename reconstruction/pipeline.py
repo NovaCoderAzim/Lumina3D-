@@ -6,8 +6,7 @@ each only know how to do their one job.
 Golden rule: nothing below ever lets an exception escape to the caller.
 Every phase-level error (ColmapError, MeshError, ConversionError,
 ValidationError) is caught and turned into a FAILED ReconstructionResult
-with a useful error_code/message/recommendation - Person 1's API layer
-never needs a try/except around this call.
+with a useful error_code/message/recommendation.
 """
 
 from __future__ import annotations
@@ -36,7 +35,7 @@ from .schemas import (
 )
 from .validation import ValidationError, validate_glb, validate_input_images
 
-logger = logging.getLogger("drishti3d.reconstruction")
+logger = logging.getLogger("lumina3d.reconstruction")
 
 _PHASE_ERRORS = (
     ValidationError,

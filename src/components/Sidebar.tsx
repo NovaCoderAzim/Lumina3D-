@@ -97,7 +97,7 @@ export function Sidebar({ analytics, visibleCategories, modelUrl, onToggleCatego
                   onClick={() => downloadArtifact(`/api/projects/${projectId}/report`, 'reconstruction_report.json')}
                   className="w-full text-left px-2.5 py-1.5 text-xs text-[var(--text)] hover:bg-[var(--surface)] hover:text-[var(--amber)] rounded flex items-center justify-between transition-colors"
                 >
-                  <span className="mono">SIH Report (.JSON)</span>
+                  <span className="mono">Quality Report (.JSON)</span>
                   <span className="text-[10px] text-[var(--muted-dim)]">Metrics & Provenance</span>
                 </button>
               </>

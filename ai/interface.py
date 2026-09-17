@@ -1,10 +1,9 @@
 """
 interface.py
 
-Public entry point for the AI & Semantic Intelligence module (Person 4,
-DRISHTI-3D). Everything else in this package (detector, tracker, semantic,
-association, mock) is an implementation detail hidden behind
-AIProcessor.process().
+Public entry point for the Lumina3D AI & Semantic Intelligence module.
+Everything else in this package (detector, tracker, semantic, association, mock)
+is an implementation detail hidden behind AIProcessor.process().
 
 Usage:
 
@@ -14,7 +13,7 @@ Usage:
     result = processor.process(
         frames_directory="data/projects/demo_001/frames/selected",
         project_id="demo_001",
-        reconstruction_metadata=None,  # or Person 3's dict, if available
+        reconstruction_metadata=None,
     )
 
 Configuration (env vars, all optional, all overridable via constructor args):
@@ -97,7 +96,7 @@ class AIProcessor:
         except Exception as exc:
             # Catch-all so a bug anywhere in the pipeline degrades to a
             # reported failure, never an unhandled crash that takes down
-            # the orchestrator (Person 2's job, not ours, to survive).
+            # the orchestrator.
             logger.exception("AI processing failed for project %s", project_id)
             return AIResult(
                 status="FAILED",

@@ -1,4 +1,4 @@
-"""DRISHTI-3D vision module (Person 2): video -> quality-selected frames."""
+"""Lumina3D vision module: video -> quality-selected frames."""
 
 from .interface import VisionProcessor
 from .schemas import FrameSelectionResult

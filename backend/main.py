@@ -1,13 +1,11 @@
 """
-DRISHTI-3D backend entry point (Person 1 — Tech Lead / Integration).
+Lumina3D backend entry point.
 
 Run:
     uvicorn backend.main:app --reload --port 8000
 
 The app is a modular monolith: one FastAPI process orchestrating the
-vision / reconstruction / ai / analytics modules behind clean interfaces
-(guide sections 2, 3, 8). Every module can run mocked so the whole thing
-works on a laptop with no GPU (guide section 7).
+vision, photogrammetry reconstruction, 3DGS, AI, and analytics modules.
 """
 
 from __future__ import annotations
@@ -30,14 +28,14 @@ settings = get_settings()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     settings.projects_dir.mkdir(parents=True, exist_ok=True)
-    logger.info("DRISHTI-3D backend starting. Mock config: %s", settings.as_dict())
+    logger.info("Lumina3D backend starting. Config: %s", settings.as_dict())
     yield
 
 
 app = FastAPI(
-    title="DRISHTI-3D Backend",
-    version="0.1.0",
-    description="Single-pass drone video -> 3D digital twin. Person 1 integration layer.",
+    title="Lumina3D Backend",
+    version="1.0.0",
+    description="Autonomous drone video to photorealistic 3D Digital Twin & 3DGS radiance field platform.",
     lifespan=lifespan,
 )
 
@@ -54,13 +52,17 @@ app.include_router(api_router)
 
 @app.get("/api/health")
 def health() -> dict:
-    return {"status": "ok", "mocks": settings.as_dict()}
+    return {
+        "status": "ok",
+        "mocks": settings.as_dict(),
+        "config": settings.as_dict(),
+    }
 
 
 @app.get("/")
 def root() -> dict:
     return {
-        "app": "DRISHTI-3D",
+        "app": "Lumina3D",
         "docs": "/docs",
         "health": "/api/health",
     }

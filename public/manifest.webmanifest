@@ -1,1 +1,8 @@
-{" name\: \DRISHTI-3D\, \short_name\: \DRISHTI-3D\, \start_url\: \/\, \display\: \standalone\, \background_color\: \#0d1117\, \theme_color\: \#0d1117\}
+{
+  "name": "Lumina3D",
+  "short_name": "Lumina3D",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117"
+}

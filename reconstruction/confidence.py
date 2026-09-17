@@ -1,10 +1,9 @@
 """
-Reconstruction confidence & coverage (SIH 26158 challenges i & vii:
-limited viewing angles from a single pass, and occluded surfaces).
+Reconstruction confidence & coverage analytics for single-pass aerial photogrammetry.
 
-The honest core of DRISHTI-3D. A single drone pass CANNOT see every
-surface, so parts of any reconstruction are unreliable. Instead of
-hallucinating those surfaces, we MEASURE and REPORT trust:
+The scientific core of Lumina3D. A single drone pass cannot see every
+surface, so parts of any reconstruction require uncertainty quantification.
+Instead of hallucinating those surfaces, Lumina3D measures and reports trust:
 
   - Per-region confidence from real signals: local point density and the
     number of cameras that observed each point (track length / multiplicity).

@@ -1,3 +1,3 @@
-"""DRISHTI-3D backend package (Person 1 — Tech Lead / Integration)."""
+"""Lumina3D backend package."""
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"

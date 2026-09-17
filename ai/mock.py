@@ -2,13 +2,12 @@
 mock.py
 
 Mock mode: returns a schema-identical AIResult without running any model.
-Enables Person 5 to build the visualization interface before real
-detection is running, and lets the pipeline be smoke-tested with
-USE_MOCK_AI=true and no GPU at all.
+Enables offline development and testing of the visualization interface before
+real detection is running, and lets the pipeline be smoke-tested with
+USE_MOCK_AI=true and no GPU.
 
-The mock output MUST use exactly the same schema as the real output ΓÇö
-see schemas.py. If that ever drifts, Person 5's integration silently
-breaks, so treat demo/objects.json as part of the contract.
+The mock output MUST use exactly the same schema as the real output —
+see schemas.py. Treat demo/objects.json as part of the contract.
 """
 
 import json

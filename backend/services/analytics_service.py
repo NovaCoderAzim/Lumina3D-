@@ -1,14 +1,8 @@
 """
-Analytics module adapter (Person 6's territory).
+Analytics module adapter.
 
-Contract (guide section 6):
-    analytics.process(frame_result, reconstruction_result, ai_result)
-        -> AnalyticsResult
-
-Person 6 has not merged a real module into this tree yet. This adapter
-computes analytics deterministically from the other modules' outputs —
-this is a genuine aggregation, not fabricated data. When Person 6 ships
-an `analytics/` package, delegate to it and flip USE_MOCK_ANALYTICS.
+Aggregates analytics deterministically from vision, reconstruction, and AI
+module outputs into unified photogrammetric & semantic statistics.
 """
 
 from __future__ import annotations

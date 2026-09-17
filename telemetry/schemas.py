@@ -1,6 +1,5 @@
 """
-Telemetry schemas — the GPS / flight-metadata contract (SIH 26158 mandatory
-input: GPS coordinates + flight metadata).
+Telemetry schemas — GPS / flight-metadata contract.
 
 Dependency-free stdlib dataclasses so any module can consume a flight
 track without pulling in parsers.
@@ -23,7 +22,7 @@ class GpsFix:
     longitude: float          # WGS84 degrees
     altitude_m: float         # metres (ellipsoidal or barometric)
     frame_index: Optional[int] = None
-    # Optional richer telemetry (SIH optional inputs).
+    # Optional richer telemetry.
     rel_altitude_m: Optional[float] = None   # barometric relative altitude
     yaw_deg: Optional[float] = None
     pitch_deg: Optional[float] = None

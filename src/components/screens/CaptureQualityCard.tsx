@@ -25,8 +25,8 @@ function Meter({ label, value }: { label: string; value: number }) {
   );
 }
 
-// Shown while the (slow) reconstruction runs — gives the operator an honest,
-// instant read on whether the capture can reconstruct (SIH challenges ii,iii,vi).
+// Shown while the reconstruction runs — gives the operator an immediate,
+// instant assessment on whether the capture can reconstruct accurately.
 export function CaptureQualityCard({ capture }: Props) {
   const color = VERDICT_COLOR[capture.verdict] ?? 'var(--muted)';
   return (

@@ -1,10 +1,7 @@
 """
-Pydantic schemas for the DRISHTI-3D reconstruction module.
+Pydantic schemas for the Lumina3D reconstruction module.
 
-These are the ONLY objects the rest of the system (Person 1's backend,
-Person 5's viewer, Person 6's stats) should ever need to know about.
-Nothing outside this package should import pycolmap, open3d, or trimesh
-directly.
+These are the public data contracts for the 3D reconstruction and photogrammetry pipeline.
 """
 
 from __future__ import annotations
@@ -72,7 +69,7 @@ class ReconstructionConfig(BaseSettings):
 class CameraPose(BaseModel):
     """One registered camera. Position/rotation are in the reconstruction's
     world frame AFTER the COLMAP -> glTF (Y-up) axis conversion, so
-    downstream consumers (Person 5) never need to transform these again."""
+    downstream consumers never need to transform these again."""
 
     image: str
     camera_id: int

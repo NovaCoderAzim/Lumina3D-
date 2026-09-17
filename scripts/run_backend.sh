@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs the DRISHTI-3D backend in full mock mode (no GPU/COLMAP/weights).
+# Runs the Lumina3D backend in full mock mode (no GPU/COLMAP/weights).
 set -euo pipefail
 
 export USE_MOCK_VISION=true

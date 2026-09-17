@@ -1,5 +1,5 @@
 """
-3D Gaussian Splatting (3DGS) Exporter for DRISHTI-3D
+3D Gaussian Splatting (3DGS) Exporter for Lumina3D
 Converts dense MVS point clouds, normals, and camera visibility into standard
 anisotropic 3D Gaussian Splats (.ply) for photorealistic real-time WebGL radiance rendering.
 Compatible with @mkkellogg/gaussian-splats-3d, SuperSplat, LichtFeld, and gsplat.

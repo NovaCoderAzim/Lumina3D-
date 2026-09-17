@@ -9,7 +9,7 @@ Real drone footage carries GPS/flight metadata in a few standard forms:
 When none is present, `synthesize_track` generates a physically-plausible
 single-pass flight track so the metric-scaling pipeline is exercisable and
 ready for real telemetry. Synthetic tracks are clearly flagged
-(is_synthetic=True) and never presented as real GPS (honesty for SIH).
+(is_synthetic=True) and never presented as real GPS.
 """
 
 from __future__ import annotations

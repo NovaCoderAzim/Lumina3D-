@@ -1,5 +1,5 @@
 """
-Abstract base classes and value types for DRISHTI-3D reconstruction engines.
+Abstract base classes and value types for Lumina3D reconstruction engines.
 """
 
 from __future__ import annotations

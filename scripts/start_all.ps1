@@ -1,5 +1,5 @@
 <#
-DRISHTI-3D — start EVERYTHING with one command.
+Lumina3D — start EVERYTHING with one command.
 
 Launches the two servers you need and nothing else:
   1. Backend  : FastAPI (real mode, .venv311) on http://127.0.0.1:8000
@@ -14,7 +14,7 @@ Usage:  powershell -ExecutionPolicy Bypass -File scripts\start_all.ps1
 $root = Join-Path $PSScriptRoot ".."
 $root = (Resolve-Path $root).Path
 
-Write-Host "Starting DRISHTI-3D..." -ForegroundColor Green
+Write-Host "Starting Lumina3D..." -ForegroundColor Green
 Write-Host "  backend  -> http://127.0.0.1:8000  (docs at /docs)" -ForegroundColor Gray
 Write-Host "  frontend -> http://localhost:5173" -ForegroundColor Gray
 

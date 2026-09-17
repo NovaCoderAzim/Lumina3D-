@@ -8,10 +8,8 @@ interface Props {
   lastDistanceUnits: number | null; // distance in model units, or null
 }
 
-// Measurement panel (SIH deliverable: "suitable for ... measurement").
-// Converts model-unit distances to real metres using the GPS-recovered
-// scale. If no metric scale is available, it says so honestly rather than
-// showing a fake number.
+// Photogrammetric spatial measurement panel.
+// Converts model-unit distances to real metres using the GPS-recovered scale.
 export function MeasurePanel({ analytics, measuring, onToggleMeasure, lastDistanceUnits }: Props) {
   const scale = analytics.metric_scale?.metres_per_unit ?? null;
   const [note] = useState('Click two points on the model to measure.');

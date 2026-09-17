@@ -1,14 +1,8 @@
 """
-Vision module adapter (Person 2's territory).
+Vision module adapter.
 
-Contract (guide section 6):
+Contract:
     vision.process(video_path) -> FrameSelectionResult
-
-Person 2 has not delivered a real module into this tree yet, so only the
-MOCK implementation exists here and it is clearly labelled as such
-(guide section 17: never present a mock as real). When Person 2 ships a
-`vision/` package with an interface, wire it into `_process_real` and
-flip USE_MOCK_VISION=false.
 """
 
 from __future__ import annotations
@@ -91,7 +85,7 @@ def process(video_path: str, project_id: str) -> FrameSelectionResult:
 
 
 def _process_real(video_path: str, project_id: str) -> FrameSelectionResult:
-    """Real frame extraction via Person 2's vision module (vision/).
+    """Real frame extraction via vision module (vision/).
 
     Decodes the actual video, scores each frame for sharpness (variance of
     the Laplacian), and keeps the sharpest, evenly-spaced frames. Raises a

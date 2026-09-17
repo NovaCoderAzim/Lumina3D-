@@ -1,6 +1,5 @@
 """
-Dynamic object masking (SIH 26158 challenge iv: dynamic objects — vehicles,
-humans, animals).
+Dynamic object masking (dynamic objects — vehicles, humans, animals).
 
 Moving objects break Structure-from-Motion: a car that drives through the
 scene produces features that don't obey the static-scene epipolar geometry,

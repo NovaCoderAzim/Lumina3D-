@@ -1,5 +1,5 @@
 """
-API routes (guide section 5). Mounted under /api to match the frontend's
+API routes. Mounted under /api to match the frontend's
 default VITE_API_BASE_URL of '/api'.
 
 Endpoints:
@@ -274,7 +274,7 @@ def get_analytics(project_id: str) -> AnalyticsResponse:
 
 @router.get("/projects/{project_id}/capture")
 def get_capture_quality(project_id: str) -> JSONResponse:
-    """Fast capture-quality report (challenges ii, iii, vi). Available as
+    """Fast capture-quality report. Available as
     soon as the analyzer runs at the start of processing."""
     project = _require(project_id)
     if project.capture_quality is None:
@@ -311,8 +311,7 @@ def get_results(project_id: str) -> ResultsResponse:
 
 @router.get("/projects/{project_id}/report")
 def get_report(project_id: str) -> JSONResponse:
-    """Lightweight JSON report (guide section 4/5). A PDF generator is
-    Person 6's job; this always-available JSON keeps the endpoint honest."""
+    """Lightweight JSON report for project analytics and objects."""
     project = _require(project_id)
     return JSONResponse(
         {
