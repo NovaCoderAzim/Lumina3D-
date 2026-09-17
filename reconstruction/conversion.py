@@ -78,35 +78,6 @@ def create_thin_presentation_base(
     return base_box
 
 
-def compute_ground_alignment_matrix(points: np.ndarray) -> np.ndarray:
-    """Computes a 3x3 rotation matrix that levels the dominant ground plane normal to [0, 1, 0]."""
-    if len(points) < 50:
-        return np.eye(3)
-    np.random.seed(42)
-    idx = np.random.choice(len(points), min(2500, len(points)), replace=False)
-    sub = points[idx]
-    cov = np.cov(sub - sub.mean(axis=0), rowvar=False)
-    eigenvalues, eigenvectors = np.linalg.eigh(cov)
-    normal = eigenvectors[:, 0]
-    if normal[1] < 0:
-        normal = -normal
-    cos_angle = normal[1] / np.linalg.norm(normal)
-    if cos_angle < 0.5:  # more than 60 deg away from vertical, don't rotate
-        return np.eye(3)
-    v_from = normal / np.linalg.norm(normal)
-    v_to = np.array([0.0, 1.0, 0.0])
-    if np.dot(v_from, v_to) > 0.9996:
-        return np.eye(3)
-    axis = np.cross(v_from, v_to)
-    axis_norm = np.linalg.norm(axis)
-    if axis_norm < 1e-6:
-        return np.eye(3)
-    axis = axis / axis_norm
-    angle = np.arccos(np.clip(np.dot(v_from, v_to), -1.0, 1.0))
-    from scipy.spatial.transform import Rotation as R
-    return R.from_rotvec(axis * angle).as_matrix()
-
-
 def export_reconstruction_to_glb(
     output_path: Path,
     point_cloud: Optional[o3d.geometry.PointCloud] = None,
@@ -251,22 +222,6 @@ def export_reconstruction_to_glb(
         has_geometry = True
         inferred_verts_count = len(inf_trimesh.vertices)
         inferred_faces_count = len(inf_trimesh.faces)
-
-    # Auto-Leveling / Ground-Plane Alignment:
-    ref_points = None
-    if observed_trimesh is not None and len(observed_trimesh.vertices) > 0:
-        ref_points = np.asarray(observed_trimesh.vertices)
-    elif dense_pts_count > 0 and point_cloud is not None:
-        ref_points = np.asarray(point_cloud.points) @ _COLMAP_TO_GLTF.T
-
-    if ref_points is not None and len(ref_points) > 50:
-        R_ground = compute_ground_alignment_matrix(ref_points)
-        if not np.allclose(R_ground, np.eye(3)):
-            T_rot = np.eye(4)
-            T_rot[:3, :3] = R_ground
-            scene.apply_transform(T_rot)
-            observed_scene.apply_transform(T_rot)
-            logger.info("Auto-leveled reconstruction dominant ground plane to horizontal [0, 1, 0]")
 
     # 5. Optional Presentation Base (Ultra-thin, presentation-only)
     if include_presentation_base and (observed_trimesh is not None or dense_pts_count > 0):

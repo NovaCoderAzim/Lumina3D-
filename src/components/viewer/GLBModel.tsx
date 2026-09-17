@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -11,6 +11,8 @@ interface Props {
   wireframe?: boolean;
   showBase?: boolean;
   showInferred?: boolean;
+  pitch?: number;
+  roll?: number;
   onFramed?: (box: THREE.Box3) => void;
 }
 
@@ -36,54 +38,6 @@ function getPointAlphaTexture(): THREE.Texture {
   return cachedPointTexture;
 }
 
-// Fast Jacobi eigenvalue solver for 3x3 symmetric covariance matrix to find dominant ground plane
-function computeSymmetricEigen3x3(A: number[][]): { normal: [number, number, number] } {
-  const V = [
-    [1, 0, 0],
-    [0, 1, 0],
-    [0, 0, 1],
-  ];
-  const a = [
-    [A[0][0], A[0][1], A[0][2]],
-    [A[0][1], A[1][1], A[1][2]],
-    [A[0][2], A[1][2], A[2][2]],
-  ];
-
-  for (let iter = 0; iter < 50; iter++) {
-    let p = 0, q = 1;
-    let maxOff = Math.abs(a[0][1]);
-    if (Math.abs(a[0][2]) > maxOff) { maxOff = Math.abs(a[0][2]); p = 0; q = 2; }
-    if (Math.abs(a[1][2]) > maxOff) { maxOff = Math.abs(a[1][2]); p = 1; q = 2; }
-
-    if (maxOff < 1e-8) break;
-
-    const app = a[p][p], aqq = a[q][q], apq = a[p][q];
-    const phi = 0.5 * Math.atan2(2 * apq, aqq - app);
-    const c = Math.cos(phi), s = Math.sin(phi);
-
-    for (let i = 0; i < 3; i++) {
-      if (i !== p && i !== q) {
-        const a_ip = a[i][p];
-        const a_iq = a[i][q];
-        a[i][p] = a[p][i] = c * a_ip - s * a_iq;
-        a[i][q] = a[q][i] = s * a_ip + c * a_iq;
-      }
-      const v_ip = V[i][p];
-      const v_iq = V[i][q];
-      V[i][p] = c * v_ip - s * v_iq;
-      V[i][q] = s * v_ip + c * v_iq;
-    }
-    a[p][p] = c * c * app - 2 * s * c * apq + s * s * aqq;
-    a[q][q] = s * s * app + 2 * s * c * apq + c * c * aqq;
-    a[p][q] = a[q][p] = 0;
-  }
-
-  const eigenvalues = [a[0][0], a[1][1], a[2][2]];
-  const indices = [0, 1, 2].sort((i, j) => eigenvalues[i] - eigenvalues[j]);
-  const minIdx = indices[0];
-  return { normal: [V[0][minIdx], V[1][minIdx], V[2][minIdx]] };
-}
-
 export function GLBModel({
   url,
   viewMode = 'HYBRID',
@@ -91,12 +45,15 @@ export function GLBModel({
   wireframe = false,
   showBase = false,
   showInferred = true,
+  pitch = -16.5,
+  roll = 0.0,
   onFramed,
 }: Props) {
   const { scene } = useGLTF(url);
+  const pivotRef = useRef<THREE.Group>(null);
 
   // Initialize scene and configure photogrammetric materials once per model
-  const { modelGroup, box } = useMemo(() => {
+  const { modelGroup } = useMemo(() => {
     const group = scene.clone(true);
     const pointTexture = getPointAlphaTexture();
 
@@ -184,77 +141,6 @@ export function GLBModel({
       }
     });
 
-    // Auto-Leveling / Ground-Plane Alignment:
-    // Sample vertices from observed meshes (or dense points) to detect the dominant ground plane normal
-    const samplePts: number[] = [];
-    group.traverse((child) => {
-      if (child instanceof THREE.Mesh || child instanceof THREE.Points) {
-        const name = (child.name || '').toLowerCase();
-        if (!name.includes('base') && !name.includes('inferred')) {
-          const pos = child.geometry?.attributes?.position;
-          if (pos && pos.count > 0) {
-            const step = Math.max(1, Math.floor(pos.count / 1500));
-            for (let i = 0; i < pos.count; i += step) {
-              samplePts.push(pos.getX(i), pos.getY(i), pos.getZ(i));
-            }
-          }
-        }
-      }
-    });
-
-    if (samplePts.length >= 300) {
-      const nPts = samplePts.length / 3;
-      let meanX = 0, meanY = 0, meanZ = 0;
-      for (let i = 0; i < samplePts.length; i += 3) {
-        meanX += samplePts[i];
-        meanY += samplePts[i + 1];
-        meanZ += samplePts[i + 2];
-      }
-      meanX /= nPts;
-      meanY /= nPts;
-      meanZ /= nPts;
-
-      let cxx = 0, cyy = 0, czz = 0, cxy = 0, cxz = 0, cyz = 0;
-      for (let i = 0; i < samplePts.length; i += 3) {
-        const dx = samplePts[i] - meanX;
-        const dy = samplePts[i + 1] - meanY;
-        const dz = samplePts[i + 2] - meanZ;
-        cxx += dx * dx; cyy += dy * dy; czz += dz * dz;
-        cxy += dx * dy; cxz += dx * dz; cyz += dy * dz;
-      }
-      cxx /= nPts; cyy /= nPts; czz /= nPts;
-      cxy /= nPts; cxz /= nPts; cyz /= nPts;
-
-      const cov = [
-        [cxx, cxy, cxz],
-        [cxy, cyy, cyz],
-        [cxz, cyz, czz],
-      ];
-      const { normal } = computeSymmetricEigen3x3(cov);
-      const groundNormal = new THREE.Vector3(normal[0], normal[1], normal[2]);
-      if (groundNormal.y < 0) groundNormal.negate();
-
-      const vertical = new THREE.Vector3(0, 1, 0);
-      const angle = groundNormal.angleTo(vertical);
-      // If dominant normal is reasonably vertical (> 30 deg above horizontal) and tilted by > 1.5 deg (> 0.026 rad)
-      if (groundNormal.y > 0.5 && angle > 0.026) {
-        const alignQuat = new THREE.Quaternion().setFromUnitVectors(groundNormal, vertical);
-        group.traverse((child) => {
-          if (child instanceof THREE.Mesh || child instanceof THREE.Points) {
-            child.geometry = child.geometry.clone();
-            child.geometry.applyQuaternion(alignQuat);
-            if (child instanceof THREE.Mesh) {
-              try {
-                child.geometry.computeVertexNormals();
-              } catch {
-                /* ignore */
-              }
-            }
-          }
-        });
-      }
-    }
-
     const b = new THREE.Box3();
     let foundTight = false;
     group.traverse((child) => {
@@ -281,22 +167,21 @@ export function GLBModel({
       b.setFromObject(group);
     }
     const center = b.getCenter(new THREE.Vector3());
-    group.position.sub(center);
+    group.position.set(-center.x, -center.y, -center.z);
 
-    const centeredBox = new THREE.Box3().setFromCenterAndSize(
-      new THREE.Vector3(0, 0, 0),
-      b.getSize(new THREE.Vector3())
-    );
-
-    return { modelGroup: group, box: centeredBox };
+    return { modelGroup: group };
   }, [scene]);
 
-  // Frame camera once when a new model is loaded
+  // Whenever pitch, roll, or modelGroup changes, update world transform and notify onFramed
   useEffect(() => {
-    if (box && !box.isEmpty()) {
-      onFramed?.(box);
+    if (pivotRef.current) {
+      pivotRef.current.updateMatrixWorld(true);
+      const worldBox = new THREE.Box3().setFromObject(pivotRef.current);
+      if (!worldBox.isEmpty()) {
+        onFramed?.(worldBox);
+      }
     }
-  }, [box, onFramed]);
+  }, [pitch, roll, modelGroup, onFramed]);
 
   // Dynamically update layer visibility, point sizing, and hybrid rendering in-place
   useEffect(() => {
@@ -401,7 +286,18 @@ export function GLBModel({
     });
   }, [modelGroup, viewMode, pointSize, wireframe, showBase, showInferred]);
 
-  return <primitive object={modelGroup} />;
+  return (
+    <group
+      ref={pivotRef}
+      rotation={[
+        THREE.MathUtils.degToRad(pitch),
+        0,
+        THREE.MathUtils.degToRad(roll),
+      ]}
+    >
+      <primitive object={modelGroup} />
+    </group>
+  );
 }
 
 useGLTF.preload;

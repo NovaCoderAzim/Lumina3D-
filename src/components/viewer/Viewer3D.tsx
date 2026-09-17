@@ -54,8 +54,11 @@ export function Viewer3D({
   const [wireframe, setWireframe] = useState<boolean>(false);
   const [showBase, setShowBase] = useState<boolean>(false);
   const [showInferred, setShowInferred] = useState<boolean>(false);
+  const [pitch, setPitch] = useState<number>(-16.5);
+  const [roll, setRoll] = useState<number>(0.0);
   const [groundY, setGroundY] = useState<number>(-2.2);
   const [gridOffset, setGridOffset] = useState<number>(0);
+  const hasFramedUrlRef = useRef<string | null>(null);
 
   const surfaceAvailable = analytics?.surface_mesh_available === true;
   const denseAvailable = analytics?.dense_mvs_available === true || (analytics?.dense_points ?? 0) > 0;
@@ -118,19 +121,27 @@ export function Viewer3D({
     }
   }, []);
 
+  useEffect(() => {
+    hasFramedUrlRef.current = null;
+  }, [activeUrl]);
+
   const handleFramed = useCallback((box: THREE.Box3) => {
-    const size = box.getSize(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z, 1);
-    // Frame close-up to fill the screen with crisp, detailed geometry from the drone's perspective
-    const dist = maxDim * 0.72;
-    controlsRef.current?.object.position.set(dist * 0.15, dist * 0.55, dist * 0.85);
-    controlsRef.current?.target.set(0, 0, 0);
-    controlsRef.current?.update();
+    // Only frame camera once per unique modelUrl
+    if (hasFramedUrlRef.current !== activeUrl && controlsRef.current) {
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z, 1);
+      // Frame close-up to fill the screen with crisp, detailed geometry from the drone's perspective
+      const dist = maxDim * 0.72;
+      controlsRef.current.object.position.set(dist * 0.15, dist * 0.55, dist * 0.85);
+      controlsRef.current.target.set(0, 0, 0);
+      controlsRef.current.update();
+      hasFramedUrlRef.current = activeUrl;
+    }
 
     if (Number.isFinite(box.min.y)) {
       setGroundY(box.min.y - 0.01);
     }
-  }, []);
+  }, [activeUrl]);
 
   return (
     <div
@@ -241,6 +252,8 @@ export function Viewer3D({
                     wireframe={wireframe}
                     showBase={showBase}
                     showInferred={showInferred}
+                    pitch={pitch}
+                    roll={roll}
                     onFramed={handleFramed}
                   />
                 </ModelErrorBoundary>
@@ -443,6 +456,82 @@ export function Viewer3D({
             </button>
           </div>
         )}
+
+        {/* Pitch Angle Alignment */}
+        <div className="flex items-center gap-1.5 rounded border border-[var(--line)] bg-[var(--panel)]/90 backdrop-blur px-2.5 py-1 text-xs mono shadow">
+          <span className="text-[var(--muted)] text-[10px] tracking-wide">PITCH</span>
+          <button
+            onClick={() => setPitch((p) => Number((p - 0.5).toFixed(1)))}
+            title="Pitch front up / back down (-0.5°)"
+            className="px-1.5 py-0.5 hover:bg-[var(--panel-raised)] text-[var(--text)] rounded cursor-pointer transition font-bold"
+          >
+            -
+          </button>
+          <span className="text-[var(--amber)] min-w-[42px] text-center font-semibold">
+            {pitch > 0 ? `+${pitch.toFixed(1)}°` : `${pitch.toFixed(1)}°`}
+          </span>
+          <button
+            onClick={() => setPitch((p) => Number((p + 0.5).toFixed(1)))}
+            title="Pitch front down / back up (+0.5°)"
+            className="px-1.5 py-0.5 hover:bg-[var(--panel-raised)] text-[var(--text)] rounded cursor-pointer transition font-bold"
+          >
+            +
+          </button>
+        </div>
+
+        {/* Roll Angle Alignment */}
+        <div className="flex items-center gap-1.5 rounded border border-[var(--line)] bg-[var(--panel)]/90 backdrop-blur px-2.5 py-1 text-xs mono shadow">
+          <span className="text-[var(--muted)] text-[10px] tracking-wide">ROLL</span>
+          <button
+            onClick={() => setRoll((r) => Number((r - 0.5).toFixed(1)))}
+            title="Roll tilt left (-0.5°)"
+            className="px-1.5 py-0.5 hover:bg-[var(--panel-raised)] text-[var(--text)] rounded cursor-pointer transition font-bold"
+          >
+            -
+          </button>
+          <span className="text-[var(--amber)] min-w-[38px] text-center font-semibold">
+            {roll > 0 ? `+${roll.toFixed(1)}°` : `${roll.toFixed(1)}°`}
+          </span>
+          <button
+            onClick={() => setRoll((r) => Number((r + 0.5).toFixed(1)))}
+            title="Roll tilt right (+0.5°)"
+            className="px-1.5 py-0.5 hover:bg-[var(--panel-raised)] text-[var(--text)] rounded cursor-pointer transition font-bold"
+          >
+            +
+          </button>
+        </div>
+
+        {/* Quick Level Preset */}
+        <button
+          onClick={() => {
+            setPitch(-16.5);
+            setRoll(0.0);
+          }}
+          title="Auto-level model flat to ground"
+          className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${
+            Math.abs(pitch - (-16.5)) < 0.1 && Math.abs(roll) < 0.1
+              ? 'bg-[var(--amber)]/25 text-[var(--amber)] border-[var(--amber)] font-bold'
+              : 'bg-[var(--panel)]/90 border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)]'
+          }`}
+        >
+          LEVEL
+        </button>
+
+        {/* Raw 0° Preset */}
+        <button
+          onClick={() => {
+            setPitch(0.0);
+            setRoll(0.0);
+          }}
+          title="Reset orientation to 0° raw"
+          className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${
+            pitch === 0.0 && roll === 0.0
+              ? 'bg-[var(--amber)]/25 text-[var(--amber)] border-[var(--amber)] font-bold'
+              : 'bg-[var(--panel)]/90 border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)]'
+          }`}
+        >
+          RAW 0°
+        </button>
 
         {/* Ground Grid Height Adjustment */}
         <div className="flex items-center gap-1.5 rounded border border-[var(--line)] bg-[var(--panel)]/90 backdrop-blur px-2.5 py-1 text-xs mono shadow">
