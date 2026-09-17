@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+dist/
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Logs
+*.log
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+.venv311/
+venv/
+env/
+*.egg-info/
+build/
+
+# ML / AI Weights (auto-downloaded on demand)
+*.pt
+*.pth
+*.onnx
+*.bin
+*.weights
+
+# Large Native Binaries & Databases
+tools/colmap/
+tools/colmap-cuda/
+tools/*.zip
+tools/*.tar.gz
+*.exe
+*.dll
+*.so
+*.dylib
+*.db
+*.sqlite
+*.sqlite3
+
+# Scratch / Temporary Test Outputs
+scratch/
+
+# Runtime Datasets & Project Outputs (Large Photogrammetry Data)
+# Keeps lightweight sample dataset demo_001 for out-of-the-box demo execution
+data/projects/*
+!data/projects/demo_001/
+!data/projects/.gitkeep
+data/multiview/
+data/test_user_recon/
+data/input/

@@ -1,0 +1,22 @@
+{
+  "project_id": "demo_001",
+  "status": "COMPLETED",
+  "model": "data\\projects\\demo_001\\reconstruction\\model.glb",
+  "point_cloud": "data\\projects\\demo_001\\reconstruction\\cloud.ply",
+  "mesh": "data\\projects\\demo_001\\reconstruction\\model.glb",
+  "camera_poses": "data\\projects\\demo_001\\reconstruction\\cameras.json",
+  "input_images": 176,
+  "registered_images": 168,
+  "registration_rate": 95.45,
+  "sparse_points": 1284,
+  "dense_points": 12840,
+  "mesh_vertices": 642,
+  "mesh_faces": 1280,
+  "processing_time_seconds": 0.04,
+  "gpu": {
+    "available": false,
+    "name": "mock-mode-no-gpu",
+    "vram_mb": null
+  },
+  "error": null
+}

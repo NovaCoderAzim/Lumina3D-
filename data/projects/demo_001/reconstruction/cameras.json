@@ -1,0 +1,194 @@
+[
+  {
+    "image": "frame_000000.jpg",
+    "camera_id": 0,
+    "position": [
+      3.0,
+      0.5,
+      0.0
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000001.jpg",
+    "camera_id": 1,
+    "position": [
+      2.598076211353316,
+      0.5,
+      1.4999999999999998
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000002.jpg",
+    "camera_id": 2,
+    "position": [
+      1.5000000000000004,
+      0.5,
+      2.598076211353316
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000003.jpg",
+    "camera_id": 3,
+    "position": [
+      1.8369701987210297e-16,
+      0.5,
+      3.0
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000004.jpg",
+    "camera_id": 4,
+    "position": [
+      -1.4999999999999993,
+      0.5,
+      2.598076211353316
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000005.jpg",
+    "camera_id": 5,
+    "position": [
+      -2.598076211353316,
+      0.5,
+      1.4999999999999998
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000006.jpg",
+    "camera_id": 6,
+    "position": [
+      -3.0,
+      0.5,
+      3.6739403974420594e-16
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000007.jpg",
+    "camera_id": 7,
+    "position": [
+      -2.5980762113533165,
+      0.5,
+      -1.4999999999999991
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000008.jpg",
+    "camera_id": 8,
+    "position": [
+      -1.5000000000000013,
+      0.5,
+      -2.5980762113533156
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000009.jpg",
+    "camera_id": 9,
+    "position": [
+      -5.51091059616309e-16,
+      0.5,
+      -3.0
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000010.jpg",
+    "camera_id": 10,
+    "position": [
+      1.5000000000000004,
+      0.5,
+      -2.598076211353316
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  },
+  {
+    "image": "frame_000011.jpg",
+    "camera_id": 11,
+    "position": [
+      2.598076211353315,
+      0.5,
+      -1.5000000000000013
+    ],
+    "rotation": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": null
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "project_id": "demo_001",
+  "summary": {
+    "buildings": 4,
+    "vehicles": 12,
+    "people": 7,
+    "vegetation": 16
+  }
+}
