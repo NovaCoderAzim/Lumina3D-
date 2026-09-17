@@ -281,10 +281,10 @@ class ProjectStore:
 
     def get(self, project_id: str) -> Optional[Project]:
         with self._lock:
-            proj = self._projects.get(project_id)
-            if proj is None:
-                proj = self._load_from_disk(project_id)
-            return proj
+            disk_proj = self._load_from_disk(project_id)
+            if disk_proj is not None:
+                return disk_proj
+            return self._projects.get(project_id)
 
     def save(self, project: Project) -> None:
         with self._lock:
@@ -299,7 +299,7 @@ class ProjectStore:
             settings = get_settings()
             if settings.projects_dir.exists():
                 for pdir in settings.projects_dir.iterdir():
-                    if pdir.is_dir() and pdir.name not in self._projects:
+                    if pdir.is_dir():
                         self._load_from_disk(pdir.name)
 
             results: List[dict] = []

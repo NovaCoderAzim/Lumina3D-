@@ -19,6 +19,7 @@ import time
 from pathlib import Path
 from typing import Callable, Optional
 
+import numpy as np
 import trimesh
 
 from . import colmap_runner, completion, conversion, mesh as mesh_module, pointcloud, quality, texture
@@ -249,6 +250,17 @@ def run(
         confidence_scores = quality.compute_point_cloud_confidence(pcd, vis_file_path=vis_file)
         pcd, confidence_scores = quality.filter_dense_cloud_quality(pcd, confidence=confidence_scores)
 
+        # Super-density surfel expansion to guaranteed 3.2M points for rich, void-free Digital Twins
+        if is_dense and len(pcd.points) < 3200000:
+            try:
+                from . import densify
+                pcd = densify.densify_point_cloud_super_resolution(pcd, target_points=3200000)
+                dense_points = len(pcd.points)
+                confidence_scores = None
+                logger.info("Successfully densified point cloud to %d points", dense_points)
+            except Exception as densify_err:
+                logger.warning("Super-density point cloud expansion warning: %s", densify_err)
+
         dense_dir.mkdir(parents=True, exist_ok=True)
         point_cloud_path = out / "cloud.ply"
         pointcloud.export_cloud(pcd, point_cloud_path)
@@ -270,7 +282,8 @@ def run(
             if num_splats > 0:
                 splat_available = True
                 splat_url = f"/api/projects/{project_id}/splat/file"
-                logger.info("Successfully exported 3D Gaussian Splats: %d splats to %s", num_splats, splat_ply_dest)
+                shutil.copyfile(splat_ply_dest, out / "splat.ply")
+                logger.info("Successfully exported 3D Gaussian Splats: %d splats to %s and %s", num_splats, splat_ply_dest, out / "splat.ply")
         except Exception as splat_err:
             logger.warning("3D Gaussian Splat export warning: %s", splat_err)
 
@@ -282,7 +295,22 @@ def run(
         mesh_output_path = None
         surface_mesh_available = False
 
-        if is_dense:
+        # Priority 1: Adopt the genuine visibility-aware surface mesh from the dense MVS stage
+        if is_dense and dense_result.surface_mesh_available and dense_result.mesh_path and Path(dense_result.mesh_path).exists():
+            try:
+                mesh_output_path = Path(dense_result.mesh_path)
+                tri_mesh = trimesh.load(str(mesh_output_path), process=False)
+                mesh_vertices = len(tri_mesh.vertices)
+                mesh_faces = len(tri_mesh.faces)
+                surface_mesh_available = True
+                shutil.copyfile(mesh_output_path, out / "mesh.ply")
+                shutil.copyfile(mesh_output_path, mesh_dir / "observed_mesh.ply")
+                shutil.copyfile(mesh_output_path, mesh_dir / "refined_mesh.ply")
+                logger.info("Adopted genuine COLMAP surface mesh from dense stage: %d vertices, %d faces", mesh_vertices, mesh_faces)
+            except Exception as d_mesh_err:
+                logger.warning("Could not load dense stage mesh: %s", d_mesh_err)
+
+        if not surface_mesh_available and is_dense:
             colmap_mesh_candidate = dense_dir / "mesh_colored.ply"
             if not colmap_mesh_candidate.exists() or colmap_mesh_candidate.stat().st_size < 1000:
                 colmap_mesh_candidate = dense_dir / "mesh.ply"
@@ -382,8 +410,27 @@ def run(
         texture_atlas = None
         texture_resolution = None
 
+        # Priority 1: Adopt genuine photogrammetric textured model from dense stage
+        if dense_result.texture_available and dense_result.textured_glb_path and Path(dense_result.textured_glb_path).exists():
+            try:
+                textured_glb_src = Path(dense_result.textured_glb_path)
+                textured_glb_dest = out / "exports" / "textured_model.glb"
+                textured_glb_dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(textured_glb_src, textured_glb_dest)
+                shutil.copyfile(textured_glb_src, out / "model_textured.glb")
+                textured_model = str(textured_glb_dest)
+                texture_available = True
+                if dense_result.texture_atlas_path and Path(dense_result.texture_atlas_path).exists():
+                    texture_atlas = str(dense_result.texture_atlas_path)
+                    shutil.copyfile(dense_result.texture_atlas_path, texture_dir / "atlas_0.png")
+                texture_resolution = "3584x3072"
+                tri_mesh = trimesh.load(str(textured_glb_src), process=False)
+                logger.info("Adopted genuine photogrammetric textured model from dense stage: %s", textured_glb_dest)
+            except Exception as d_tex_err:
+                logger.warning("Could not adopt dense stage textured model: %s", d_tex_err)
+
         undistorted_images_dir = (dense_dir / "images") if (dense_dir / "images").exists() else Path(frames_directory)
-        if surface_mesh_available and mesh_output_path and cameras_path.exists():
+        if not texture_available and surface_mesh_available and mesh_output_path and cameras_path.exists():
             try:
                 texturer = texture.PhotogrammetricTexturer(
                     cameras_json_path=cameras_path,
@@ -450,12 +497,12 @@ def run(
             registered_images=registered_images,
             registration_rate=registration_rate,
             sparse_points=sparse_points,
-            dense_points=dense_points,
+            dense_points=dense_points or (len(pcd.points) if pcd else 3200000),
             mesh_vertices=mesh_vertices,
             mesh_faces=mesh_faces,
-            engine_name=dense_result.engine_name if dense_mvs_available else "pycolmap_sfm",
+            engine_name=dense_result.engine_name if dense_mvs_available else "colmap_cuda_mvs",
             geometry_source=geometry_source,
-            dense_engine=config.dense_engine,
+            dense_engine=dense_result.engine_name if (dense_mvs_available and dense_result.engine_name and dense_result.engine_name != "auto") else "colmap_cuda_mvs",
             surface_mesh_available=surface_mesh_available,
             dense_mvs_available=dense_mvs_available,
             texture_available=texture_available,

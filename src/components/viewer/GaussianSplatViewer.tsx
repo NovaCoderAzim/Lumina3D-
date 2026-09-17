@@ -148,7 +148,7 @@ export function GaussianSplatViewer({
           viewerInstance.stop?.();
           const disp = viewerInstance.dispose?.();
           if (disp && typeof disp.catch === 'function') {
-            disp.catch(() => {});
+            disp.catch(() => { });
           }
         }
       } catch (dispErr) {

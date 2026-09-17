@@ -63,7 +63,7 @@ export function Viewer3D({
   const surfaceAvailable = analytics?.surface_mesh_available === true;
   const denseAvailable = analytics?.dense_mvs_available === true || (analytics?.dense_points ?? 0) > 0;
   const textureAvailable = analytics?.texture_available === true;
-  
+
   const currentProjectId = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('projectId') : null;
   const splatUrl = analytics?.splat_url || (currentProjectId ? `/api/projects/${currentProjectId}/splat/file` : null);
   const splatAvailable = analytics?.splat_available === true;
@@ -293,24 +293,22 @@ export function Viewer3D({
             onClick={() => splatAvailable && setViewMode('SPLATS')}
             disabled={!splatAvailable}
             title={!splatAvailable ? '3DGS unavailable' : 'Render continuous 3D Gaussian Splatting radiance field'}
-            className={`px-3 py-1.5 transition-colors ${
-              viewMode === 'SPLATS' && splatAvailable
+            className={`px-3 py-1.5 transition-colors ${viewMode === 'SPLATS' && splatAvailable
                 ? 'bg-amber-400/25 text-amber-300 font-bold border-r border-amber-400/30 shadow-inner'
                 : splatAvailable
-                ? 'text-[var(--text)] hover:text-amber-300'
-                : 'text-[var(--muted-dim)] cursor-not-allowed opacity-40'
-            }`}
+                  ? 'text-[var(--text)] hover:text-amber-300'
+                  : 'text-[var(--muted-dim)] cursor-not-allowed opacity-40'
+              }`}
           >
             ✨ 3DGS
           </button>
           <button
             onClick={() => setViewMode('OBSERVED')}
             title="Render authentic observed photogrammetric geometry only"
-            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${
-              viewMode === 'OBSERVED'
+            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${viewMode === 'OBSERVED'
                 ? 'bg-[var(--amber)]/20 text-[var(--amber)] font-bold'
                 : 'text-[var(--muted)] hover:text-[var(--text)]'
-            }`}
+              }`}
           >
             OBSERVED
           </button>
@@ -318,13 +316,12 @@ export function Viewer3D({
             onClick={() => denseAvailable && setViewMode('DENSE')}
             disabled={!denseAvailable}
             title={!denseAvailable ? 'Dense MVS unavailable' : 'Render dense point cloud'}
-            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${
-              viewMode === 'DENSE' && denseAvailable
+            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${viewMode === 'DENSE' && denseAvailable
                 ? 'bg-[var(--amber)]/20 text-[var(--amber)] font-bold'
                 : denseAvailable
-                ? 'text-[var(--muted)] hover:text-[var(--text)]'
-                : 'text-[var(--muted-dim)] cursor-not-allowed opacity-40'
-            }`}
+                  ? 'text-[var(--muted)] hover:text-[var(--text)]'
+                  : 'text-[var(--muted-dim)] cursor-not-allowed opacity-40'
+              }`}
           >
             DENSE
           </button>
@@ -332,13 +329,12 @@ export function Viewer3D({
             onClick={() => surfaceAvailable && setViewMode('MESH')}
             disabled={!surfaceAvailable}
             title={!surfaceAvailable ? 'Mesh unavailable' : 'Render continuous surface mesh'}
-            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${
-              viewMode === 'MESH' && surfaceAvailable
+            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${viewMode === 'MESH' && surfaceAvailable
                 ? 'bg-[var(--amber)]/20 text-[var(--amber)] font-bold'
                 : surfaceAvailable
-                ? 'text-[var(--muted)] hover:text-[var(--text)]'
-                : 'text-[var(--muted-dim)] cursor-not-allowed opacity-40'
-            }`}
+                  ? 'text-[var(--muted)] hover:text-[var(--text)]'
+                  : 'text-[var(--muted-dim)] cursor-not-allowed opacity-40'
+              }`}
           >
             MESH
           </button>
@@ -346,24 +342,22 @@ export function Viewer3D({
             onClick={() => textureAvailable && setViewMode('TEXTURED')}
             disabled={!textureAvailable}
             title={!textureAvailable ? 'Texture map unavailable' : 'Render photogrammetric textured model'}
-            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${
-              viewMode === 'TEXTURED' && textureAvailable
+            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${viewMode === 'TEXTURED' && textureAvailable
                 ? 'bg-[var(--amber)]/20 text-[var(--amber)] font-bold'
                 : textureAvailable
-                ? 'text-[var(--muted)] hover:text-[var(--text)]'
-                : 'text-[var(--muted-dim)] cursor-not-allowed opacity-40'
-            }`}
+                  ? 'text-[var(--muted)] hover:text-[var(--text)]'
+                  : 'text-[var(--muted-dim)] cursor-not-allowed opacity-40'
+              }`}
           >
             TEXTURED
           </button>
           <button
             onClick={() => setViewMode('INFERRED')}
             title="Inspect inferred structural completions"
-            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${
-              viewMode === 'INFERRED'
+            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${viewMode === 'INFERRED'
                 ? 'bg-[var(--amber)]/20 text-[var(--amber)] font-bold'
                 : 'text-[var(--muted)] hover:text-[var(--text)]'
-            }`}
+              }`}
           >
             INFERRED
           </button>
@@ -371,35 +365,32 @@ export function Viewer3D({
             onClick={() => surfaceAvailable && setViewMode('HYBRID')}
             disabled={!surfaceAvailable}
             title={!surfaceAvailable ? 'Hybrid mode unavailable' : 'Composite observed surface + completions + micro-points'}
-            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${
-              viewMode === 'HYBRID' && surfaceAvailable
+            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${viewMode === 'HYBRID' && surfaceAvailable
                 ? 'bg-[var(--amber)]/20 text-[var(--amber)] font-bold'
                 : surfaceAvailable
-                ? 'text-[var(--muted)] hover:text-[var(--text)]'
-                : 'text-[var(--muted-dim)] cursor-not-allowed opacity-40'
-            }`}
+                  ? 'text-[var(--muted)] hover:text-[var(--text)]'
+                  : 'text-[var(--muted-dim)] cursor-not-allowed opacity-40'
+              }`}
           >
             HYBRID
           </button>
           <button
             onClick={() => setViewMode('PRESENTATION')}
             title="Complete scene with optional presentation base"
-            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${
-              viewMode === 'PRESENTATION'
+            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${viewMode === 'PRESENTATION'
                 ? 'bg-[var(--amber)]/20 text-[var(--amber)] font-bold'
                 : 'text-[var(--muted)] hover:text-[var(--text)]'
-            }`}
+              }`}
           >
             PRESENTATION
           </button>
           <button
             onClick={() => setViewMode('SPARSE')}
             title="Sparse SfM camera tie-points"
-            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${
-              viewMode === 'SPARSE'
+            className={`px-3 py-1.5 transition-colors border-l border-[var(--line)] ${viewMode === 'SPARSE'
                 ? 'bg-[var(--amber)]/20 text-[var(--amber)] font-bold'
                 : 'text-[var(--muted)] hover:text-[var(--text)]'
-            }`}
+              }`}
           >
             SPARSE
           </button>
@@ -409,11 +400,10 @@ export function Viewer3D({
         <button
           onClick={() => setShowInferred((s) => !s)}
           title="Toggle inferred structural facade completions"
-          className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${
-            showInferred
+          className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${showInferred
               ? 'bg-[var(--amber)]/25 text-[var(--amber)] border-[var(--amber)] font-bold'
               : 'bg-[var(--panel)]/90 border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)]'
-          }`}
+            }`}
         >
           INFERRED: {showInferred ? 'ON' : 'OFF'}
         </button>
@@ -422,11 +412,10 @@ export function Viewer3D({
         <button
           onClick={() => setShowBase((b) => !b)}
           title="Toggle optional thin presentation base plate (presentation-only, excluded from statistics)"
-          className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${
-            showBase || viewMode === 'PRESENTATION'
+          className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${showBase || viewMode === 'PRESENTATION'
               ? 'bg-[var(--amber)]/25 text-[var(--amber)] border-[var(--amber)] font-bold'
               : 'bg-[var(--panel)]/90 border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)]'
-          }`}
+            }`}
         >
           BASE: {showBase || viewMode === 'PRESENTATION' ? 'ON' : 'OFF'}
         </button>
@@ -436,11 +425,10 @@ export function Viewer3D({
           <button
             onClick={() => setWireframe((w) => !w)}
             title="Toggle topological wireframe overlay"
-            className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${
-              wireframe
+            className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${wireframe
                 ? 'bg-[var(--amber)]/25 text-[var(--amber)] border-[var(--amber)] font-bold'
                 : 'bg-[var(--panel)]/90 border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)]'
-            }`}
+              }`}
           >
             WIREFRAME: {wireframe ? 'ON' : 'OFF'}
           </button>
@@ -519,11 +507,10 @@ export function Viewer3D({
             setRoll(0.0);
           }}
           title="Auto-level model flat to ground"
-          className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${
-            Math.abs(pitch - (-16.5)) < 0.1 && Math.abs(roll) < 0.1
+          className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${Math.abs(pitch - (-16.5)) < 0.1 && Math.abs(roll) < 0.1
               ? 'bg-[var(--amber)]/25 text-[var(--amber)] border-[var(--amber)] font-bold'
               : 'bg-[var(--panel)]/90 border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)]'
-          }`}
+            }`}
         >
           LEVEL
         </button>
@@ -535,11 +522,10 @@ export function Viewer3D({
             setRoll(0.0);
           }}
           title="Reset orientation to 0° raw"
-          className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${
-            pitch === 0.0 && roll === 0.0
+          className={`rounded border px-2.5 py-1 text-xs mono transition cursor-pointer shadow ${pitch === 0.0 && roll === 0.0
               ? 'bg-[var(--amber)]/25 text-[var(--amber)] border-[var(--amber)] font-bold'
               : 'bg-[var(--panel)]/90 border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)]'
-          }`}
+            }`}
         >
           RAW 0°
         </button>
@@ -571,14 +557,14 @@ export function Viewer3D({
           <span>PROVENANCE: </span>
           <span className="text-[var(--amber)] font-semibold">
             {viewMode === 'SPLATS' ? '3D GAUSSIAN SPLATTING (3DGS) RADIANCE FIELD' :
-             viewMode === 'OBSERVED' ? 'OBSERVED ONLY (100% PHOTOGRAMMETRY)' :
-             viewMode === 'INFERRED' ? 'INFERRED COMPLETIONS ONLY' :
-             viewMode === 'SPARSE' ? 'OBSERVED SfM TIE-POINTS' :
-             viewMode === 'DENSE' ? 'OBSERVED MVS POINT CLOUD' :
-             viewMode === 'MESH' ? 'REFINED SURFACE MESH' :
-             viewMode === 'TEXTURED' ? 'PHOTOGRAMMETRIC TEXTURED' :
-             viewMode === 'PRESENTATION' ? 'PRESENTATION COMPOSITE' :
-             'HYBRID (OBSERVED + DENSE)'}
+              viewMode === 'OBSERVED' ? 'OBSERVED ONLY (100% PHOTOGRAMMETRY)' :
+                viewMode === 'INFERRED' ? 'INFERRED COMPLETIONS ONLY' :
+                  viewMode === 'SPARSE' ? 'OBSERVED SfM TIE-POINTS' :
+                    viewMode === 'DENSE' ? 'OBSERVED MVS POINT CLOUD' :
+                      viewMode === 'MESH' ? 'REFINED SURFACE MESH' :
+                        viewMode === 'TEXTURED' ? 'PHOTOGRAMMETRIC TEXTURED' :
+                          viewMode === 'PRESENTATION' ? 'PRESENTATION COMPOSITE' :
+                            'HYBRID (OBSERVED + DENSE)'}
           </span>
           {analytics?.dense_points ? (
             <span className="text-[var(--muted)]"> · {(analytics.dense_points / 1e6).toFixed(1)}M pts</span>
